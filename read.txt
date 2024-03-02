@@ -1,0 +1,5 @@
+
+supe user striker,striker@gmail.com,12345
+
+celery worker - celery -A stockproject.celery worker --pool=solo -l info
+celery beat -> celery -A stockproject beat -l INFO
