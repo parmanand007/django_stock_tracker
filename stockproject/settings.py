@@ -147,3 +147,5 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+DJANGO_CELERY_BEAT_TZ_AWARE=False
