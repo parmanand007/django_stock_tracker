@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'mainapp',
     "django_celery_results",
-    "django_celery_beat"
+    "django_celery_beat",
+    "channels"
 ]
 
 MIDDLEWARE = [
@@ -71,7 +72,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'stockproject.wsgi.application'
-
+ASGI_APPLICATION = "stockproject.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -137,3 +138,12 @@ CELERY_TIMEZONE='Asia/Kolkata'
 CELERY_RESULT_BACKEND="django-db"
 #to allocate the task we use sepearte module called django-celery beat
 CELERY_BEAT_SCHEDULER="django_celery_beat.schedulers:DatabaseScheduler"
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
