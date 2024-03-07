@@ -10,22 +10,20 @@ from django_celery_beat.models import PeriodicTask,IntervalSchedule
 class StockConsumer(AsyncWebsocketConsumer):
 
     @sync_to_async
-    def addToCeleryBeat(self,stockpicker):
-        task=PeriodicTask.objects.filter(name="every-10-seconds")
+    def addToCeleryBeat(self, stockpicker):
+        task = PeriodicTask.objects.filter(name = "every-10-seconds")
         if len(task)>0:
-            #add those stock instead of creating new periodic task
-            args = json.load(task.args)
-            args=args[0]
+            task = task.first()
+            args = json.loads(task.args)
+            args = args[0]
             for x in stockpicker:
                 if x not in args:
                     args.append(x)
-            task.args=json.dumps([args])
+            task.args = json.dumps([args])
             task.save()
         else:
-            #create new task
-            schedule,created=IntervalSchedule.objects.get_or_create(every=10,period=IntervalSchedule.SECONDS)
-            task= PeriodicTask.objects.create(interval=schedule,name="every-10-seconds",task="mainapp.tasks.update_stock",args=json.dumps([stockpicker]))
-
+            schedule, created = IntervalSchedule.objects.get_or_create(every=10, period = IntervalSchedule.SECONDS)
+            task = PeriodicTask.objects.create(interval = schedule, name='every-10-seconds', task="mainapp.tasks.update_stock", args = json.dumps([stockpicker]))
 
         
 
@@ -57,11 +55,11 @@ class StockConsumer(AsyncWebsocketConsumer):
 
         # Send message to room group
         await self.channel_layer.group_send(
-            self.room_group_name, {"type": "stock_update", "message": message}
+            self.room_group_name, {"type": "send_update", "message": message}
         )
 
     # Receive message from room group
-    async def stock_update(self, event):
+    async def send_stock_update(self, event):
         message = event["message"]
 
         # Send message to WebSocket
