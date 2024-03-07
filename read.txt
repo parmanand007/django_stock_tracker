@@ -3,3 +3,4 @@ supe user striker,striker@gmail.com,12345
 
 celery worker - celery -A stockproject.celery worker --pool=solo -l info
 celery beat -> celery -A stockproject beat -l INFO
+4. we use django channel to use websocket after we use asgi instead of wsgi
