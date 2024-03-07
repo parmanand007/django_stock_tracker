@@ -4,6 +4,7 @@ from django.http import HttpResponse
 import time
 import queue
 from threading import Thread
+import simplejson as json
 # Create your views here.
 
 
@@ -32,7 +33,7 @@ def stockTracker(request):
     #     result = get_quote_table(i)
     #     data.update({i:result})
     for i in range(n_threads):
-        thread = Thread(target = lambda q, arg1: q.put({stockpicker[i]: get_quote_table(arg1)}), args = (que, stockpicker[i]))
+        thread = Thread(target = lambda q, arg1: q.put({stockpicker[i]: json.loads(json.dumps(get_quote_table(arg1),ignore_nan=True))}), args = (que, stockpicker[i]))
         thread_list.append(thread)  #list need to join later
         thread_list[i].start()
 
